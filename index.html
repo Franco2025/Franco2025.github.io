@@ -228,6 +228,35 @@
         letter-spacing: 0;
       }
 
+      .menu-button {
+        display: none;
+      }
+
+      .mobile-hamburger {
+        display: none;
+        position: fixed;
+        right: auto;
+        left: min(334px, calc(100% - 56px));
+        top: 13px;
+        transform: none;
+        z-index: 999;
+        background: var(--violet-deep);
+        color: #fffaf3;
+        border-color: rgba(43, 23, 79, 0.2);
+        font-size: 1.34rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .mobile-hamburger .icon {
+        display: none;
+      }
+
+      .mobile-hamburger .hamburger-symbol {
+        display: inline-block;
+        transform: translateY(-1px);
+      }
+
       .icon {
         width: 18px;
         height: 18px;
@@ -256,6 +285,42 @@
         background: currentColor;
         border-radius: 4px;
         transform: rotate(45deg);
+      }
+
+      .icon.menu,
+      .icon.menu::before,
+      .icon.menu::after {
+        width: 19px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .icon.menu {
+        top: 0;
+      }
+
+      .icon.menu::before,
+      .icon.menu::after {
+        content: "";
+        position: absolute;
+        left: 0;
+      }
+
+      .icon.menu::before {
+        top: -6px;
+      }
+
+      .icon.menu::after {
+        top: 6px;
+      }
+
+      .hamburger-symbol {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: none;
       }
 
       .hero {
@@ -606,31 +671,32 @@
       }
 
       .play-button {
-        width: 66px;
-        min-width: 66px;
-        height: 66px;
-        min-height: 66px;
-        padding: 0;
+        width: fit-content;
+        min-width: 148px;
+        height: 54px;
+        min-height: 54px;
+        padding: 0 24px;
         background: #fff8ed;
         color: var(--violet-deep);
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
         box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
       }
 
-      .play-triangle {
-        width: 0;
-        height: 0;
-        margin-left: 4px;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-        border-left: 16px solid currentColor;
+      .play-label {
+        display: inline-block;
+        min-width: 96px;
+        text-align: center;
       }
 
-      .live-card.is-playing .play-triangle {
-        width: 16px;
-        height: 20px;
-        margin-left: 0;
-        border: 0;
-        background: linear-gradient(90deg, currentColor 0 35%, transparent 35% 65%, currentColor 65% 100%);
+      .live-card.is-playing .play-button {
+        background: #f2cf78;
+        color: var(--violet-deep);
+      }
+
+      .live-card.is-connecting .play-button {
+        background: rgba(255, 248, 237, 0.82);
+        color: var(--violet-deep);
       }
 
       .waveform {
@@ -986,6 +1052,73 @@
           display: none;
         }
 
+        .search-button {
+          display: none;
+        }
+
+        .menu-button {
+          display: inline-flex;
+        }
+
+        .mobile-hamburger {
+          display: inline-flex;
+          position: fixed;
+          right: auto;
+          left: min(334px, calc(100% - 56px));
+          top: 13px;
+          transform: none;
+          z-index: 999;
+          background: var(--violet-deep);
+          color: #fffaf3;
+          border-color: rgba(43, 23, 79, 0.2);
+          font-size: 1.34rem;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .mobile-hamburger .icon {
+          display: none;
+        }
+
+        .mobile-hamburger .hamburger-symbol {
+          display: inline-block;
+          transform: translateY(-1px);
+        }
+
+        .mobile-menu {
+          display: grid;
+          max-height: 0;
+          overflow: hidden;
+          border-top: 1px solid rgba(43, 23, 79, 0);
+          background: rgba(251, 247, 240, 0.96);
+          transition:
+            max-height 220ms ease,
+            border-color 220ms ease;
+        }
+
+        .topbar.menu-open .mobile-menu {
+          max-height: 260px;
+          border-color: rgba(43, 23, 79, 0.08);
+        }
+
+        .mobile-menu-inner {
+          width: min(1120px, calc(100% - 40px));
+          margin: 0 auto;
+          padding: 14px 0 18px;
+          display: grid;
+          gap: 8px;
+        }
+
+        .mobile-menu a {
+          padding: 12px 0;
+          color: var(--violet-deep);
+          font-size: 0.78rem;
+          font-weight: 800;
+          letter-spacing: 0.09em;
+          text-transform: uppercase;
+          border-bottom: 1px solid rgba(43, 23, 79, 0.08);
+        }
+
         .hero-grid,
         .media-grid,
         .community-content {
@@ -1053,6 +1186,12 @@
 
         .nav {
           min-height: 68px;
+          position: relative;
+          padding-right: 54px;
+        }
+
+        .nav .brand {
+          min-width: 0;
         }
 
         .brand-kicker,
@@ -1165,11 +1304,23 @@
 
           <div class="nav-actions">
             <a class="button" href="#comunidad">Únete</a>
-            <button class="icon-button" type="button" aria-label="Buscar">
+            <button class="icon-button search-button" type="button" aria-label="Buscar">
               <span class="icon search" aria-hidden="true"></span>
             </button>
           </div>
+            <button class="icon-button mobile-hamburger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+            <span class="icon menu" aria-hidden="true"></span>
+            <span class="hamburger-symbol" aria-hidden="true">☰</span>
+            </button>
         </div>
+        <nav class="mobile-menu" id="mobile-menu" aria-label="Navegacion mobile">
+          <div class="mobile-menu-inner">
+            <a href="#podcast">Podcast</a>
+            <a href="#video">YouTube</a>
+            <a href="#instagram">Instagram</a>
+            <a href="#comunidad">Comunidad</a>
+          </div>
+        </nav>
       </header>
 
       <main id="inicio">
@@ -1259,7 +1410,7 @@
                   </p>
                   <div class="player-row">
                     <button class="play-button" id="play-toggle" type="button" aria-label="Reproducir podcast">
-                      <span class="play-triangle" aria-hidden="true"></span>
+                      <span class="play-label">Reproducir</span>
                     </button>
                     <div class="waveform" aria-hidden="true">
                       <span style="--i: 1; --h: 34px"></span>
@@ -1435,12 +1586,63 @@
     </div>
 
     <script>
+      const topbar = document.querySelector(".topbar");
+      const menuToggle = document.querySelector("#menu-toggle");
+      const mobileMenu = document.querySelector("#mobile-menu");
       const liveCard = document.querySelector("#live-card");
       const playToggle = document.querySelector("#play-toggle");
+      const playLabel = playToggle.querySelector(".play-label");
+      let playState = "idle";
+      let connectTimer;
+
+      const syncMenuButton = () => {
+        const visibleWidth = document.documentElement.clientWidth || window.innerWidth;
+        if (visibleWidth > 920) {
+          topbar.classList.remove("menu-open");
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.setAttribute("aria-label", "Abrir menú");
+        }
+      };
+
+      syncMenuButton();
+      window.addEventListener("resize", syncMenuButton);
+
+      menuToggle.addEventListener("click", () => {
+        const isOpen = topbar.classList.toggle("menu-open");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+        menuToggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
+      });
+
+      mobileMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          topbar.classList.remove("menu-open");
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.setAttribute("aria-label", "Abrir menú");
+        });
+      });
 
       playToggle.addEventListener("click", () => {
-        const isPlaying = liveCard.classList.toggle("is-playing");
-        playToggle.setAttribute("aria-label", isPlaying ? "Pausar podcast" : "Reproducir podcast");
+        if (playState === "playing" || playState === "connecting") {
+          clearTimeout(connectTimer);
+          playState = "idle";
+          liveCard.classList.remove("is-playing", "is-connecting");
+          playLabel.textContent = "Reproducir";
+          playToggle.setAttribute("aria-label", "Reproducir podcast");
+          return;
+        }
+
+        playState = "connecting";
+        liveCard.classList.add("is-connecting");
+        playLabel.textContent = "Reproduciendo...";
+        playToggle.setAttribute("aria-label", "Conectando reproducción");
+
+        connectTimer = setTimeout(() => {
+          playState = "playing";
+          liveCard.classList.remove("is-connecting");
+          liveCard.classList.add("is-playing");
+          playLabel.textContent = "Detener";
+          playToggle.setAttribute("aria-label", "Detener reproducción");
+        }, 900);
       });
     </script>
   </body>
