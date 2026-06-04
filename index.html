@@ -607,6 +607,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        container-type: inline-size;
         overflow: hidden;
         position: relative;
       }
@@ -666,14 +667,14 @@
         display: grid;
         grid-template-columns: auto minmax(220px, 1fr);
         align-items: center;
-        gap: 18px;
+        gap: clamp(16px, 2.4vw, 28px);
         margin-top: 28px;
         max-width: 100%;
       }
 
       .play-button {
-        width: fit-content;
-        min-width: 164px;
+        width: 218px;
+        min-width: 218px;
         height: 58px;
         min-height: 58px;
         padding: 0 28px;
@@ -682,18 +683,31 @@
         font-size: 0.78rem;
         letter-spacing: 0.1em;
         box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+        -webkit-tap-highlight-color: transparent;
+        transform: none !important;
+        transition:
+          background 180ms ease,
+          color 180ms ease,
+          box-shadow 180ms ease;
       }
 
       .play-button:hover,
-      .play-button:active {
-        transform: none;
+      .play-button:active,
+      .play-button:focus {
+        transform: none !important;
         background: #fff8ed;
         box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+        outline: none;
+      }
+
+      .play-button:focus-visible {
+        outline: 2px solid rgba(242, 207, 120, 0.8);
+        outline-offset: 4px;
       }
 
       .play-label {
         display: inline-block;
-        min-width: 96px;
+        width: 150px;
         text-align: center;
       }
 
@@ -703,7 +717,8 @@
       }
 
       .live-card.is-playing .play-button:hover,
-      .live-card.is-playing .play-button:active {
+      .live-card.is-playing .play-button:active,
+      .live-card.is-playing .play-button:focus {
         background: #f2cf78;
       }
 
@@ -713,19 +728,20 @@
       }
 
       .live-card.is-connecting .play-button:hover,
-      .live-card.is-connecting .play-button:active {
+      .live-card.is-connecting .play-button:active,
+      .live-card.is-connecting .play-button:focus {
         background: rgba(255, 248, 237, 0.82);
       }
 
       .waveform {
         height: 0;
         width: 100%;
-        max-width: 390px;
+        max-width: 340px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: clamp(6px, 1vw, 10px);
-        padding: 0 4px;
+        padding: 0 10px;
         opacity: 0;
         overflow: hidden;
         position: relative;
@@ -752,7 +768,7 @@
       }
 
       .live-card.is-playing .waveform {
-        height: 78px;
+        height: 94px;
         opacity: 1;
         transform: scaleX(1) translateY(0);
       }
@@ -842,6 +858,24 @@
       .small-meta {
         color: rgba(255, 248, 237, 0.68);
         font-size: 0.86rem;
+      }
+
+      @container (max-width: 560px) {
+        .player-row {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          gap: 16px;
+          width: 100%;
+        }
+
+        .waveform {
+          width: min(100%, 318px);
+          max-width: 100%;
+          justify-content: center;
+          gap: clamp(8px, 2.4vw, 11px);
+          padding-inline: 12px;
+          transform-origin: center;
+        }
       }
 
       .video-card {
@@ -1491,24 +1525,26 @@
         .player-row {
           grid-template-columns: 1fr;
           justify-items: center;
-          gap: 12px;
+          gap: 18px;
           width: 100%;
         }
 
         .waveform {
           height: 0;
-          width: min(100%, 280px);
+          width: min(100%, 318px);
           max-width: 100%;
           justify-content: center;
-          gap: 9px;
+          gap: clamp(8px, 2.4vw, 11px);
+          padding-inline: 12px;
         }
 
         .live-card.is-playing .waveform {
-          height: 62px;
+          height: 78px;
         }
 
         .play-button {
-          min-width: 188px;
+          width: 218px;
+          min-width: 218px;
           height: 58px;
           min-height: 58px;
         }
@@ -1676,6 +1712,10 @@
                       <span style="--i: 10; --h: 46px"></span>
                       <span style="--i: 11; --h: 30px"></span>
                       <span style="--i: 12; --h: 58px"></span>
+                      <span style="--i: 13; --h: 36px"></span>
+                      <span style="--i: 14; --h: 50px"></span>
+                      <span style="--i: 15; --h: 32px"></span>
+                      <span style="--i: 16; --h: 44px"></span>
                     </div>
                   </div>
                 </div>
@@ -1895,6 +1935,8 @@
       });
 
       playToggle.addEventListener("click", () => {
+        playToggle.blur();
+
         if (playState === "playing" || playState === "connecting") {
           clearTimeout(connectTimer);
           playState = "idle";
