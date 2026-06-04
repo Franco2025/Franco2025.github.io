@@ -664,22 +664,30 @@
 
       .player-row {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-columns: auto minmax(220px, 1fr);
         align-items: center;
         gap: 18px;
         margin-top: 28px;
+        max-width: 100%;
       }
 
       .play-button {
         width: fit-content;
-        min-width: 148px;
-        height: 54px;
-        min-height: 54px;
-        padding: 0 24px;
+        min-width: 164px;
+        height: 58px;
+        min-height: 58px;
+        padding: 0 28px;
         background: #fff8ed;
         color: var(--violet-deep);
-        font-size: 0.76rem;
+        font-size: 0.78rem;
         letter-spacing: 0.1em;
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+      }
+
+      .play-button:hover,
+      .play-button:active {
+        transform: none;
+        background: #fff8ed;
         box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
       }
 
@@ -694,17 +702,63 @@
         color: var(--violet-deep);
       }
 
+      .live-card.is-playing .play-button:hover,
+      .live-card.is-playing .play-button:active {
+        background: #f2cf78;
+      }
+
       .live-card.is-connecting .play-button {
         background: rgba(255, 248, 237, 0.82);
         color: var(--violet-deep);
       }
 
+      .live-card.is-connecting .play-button:hover,
+      .live-card.is-connecting .play-button:active {
+        background: rgba(255, 248, 237, 0.82);
+      }
+
       .waveform {
-        height: 78px;
+        height: 0;
+        width: 100%;
+        max-width: 390px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: space-between;
+        gap: clamp(6px, 1vw, 10px);
         padding: 0 4px;
+        opacity: 0;
+        overflow: hidden;
+        position: relative;
+        transform: scaleX(0.72) translateY(6px);
+        transform-origin: left center;
+        transition:
+          height 240ms ease,
+          opacity 220ms ease,
+          transform 240ms ease;
+      }
+
+      .waveform::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        top: 50%;
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(242, 207, 120, 0.2), #f2cf78, rgba(255, 248, 237, 0.42));
+        opacity: 0;
+        transform: translateY(-50%) scaleX(0);
+        transform-origin: left center;
+      }
+
+      .live-card.is-playing .waveform {
+        height: 78px;
+        opacity: 1;
+        transform: scaleX(1) translateY(0);
+      }
+
+      .live-card.is-playing .waveform::before {
+        animation: waveform-line-intro 900ms ease both;
       }
 
       .waveform span {
@@ -712,21 +766,66 @@
         height: var(--h);
         border-radius: 999px;
         background: linear-gradient(180deg, #f2cf78, rgba(255, 248, 237, 0.38));
-        opacity: 0.88;
-        animation: wave 1.8s ease-in-out infinite;
-        animation-delay: calc(var(--i) * -90ms);
+        opacity: 0;
+        position: relative;
+        z-index: 1;
+        transform: scaleY(0.16);
+        transform-origin: center;
+      }
+
+      .live-card.is-playing .waveform span {
+        animation-name: bar-rise, wave;
+        animation-duration: 620ms, 1.8s;
+        animation-timing-function: cubic-bezier(0.2, 0.8, 0.24, 1), ease-in-out;
+        animation-delay: calc(420ms + (var(--i) * 22ms)), calc(1120ms + (var(--i) * 22ms));
+        animation-iteration-count: 1, infinite;
+        animation-fill-mode: both, none;
+      }
+
+      @keyframes waveform-line-intro {
+        0% {
+          opacity: 0;
+          transform: translateY(-50%) scaleX(0);
+        }
+
+        22% {
+          opacity: 0.95;
+          transform: translateY(-50%) scaleX(0.28);
+        }
+
+        62% {
+          opacity: 0.92;
+          transform: translateY(-50%) scaleX(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translateY(-50%) scaleX(1);
+        }
+      }
+
+      @keyframes bar-rise {
+        0% {
+          opacity: 0;
+          transform: scaleY(0.16);
+        }
+
+        100% {
+          opacity: 0.88;
+          transform: scaleY(1);
+        }
       }
 
       @keyframes wave {
         0%,
         100% {
-          transform: scaleY(0.64);
-          opacity: 0.54;
+          transform: scaleY(1);
+          opacity: 0.88;
         }
 
         50% {
-          transform: scaleY(1);
-          opacity: 1;
+          transform: scaleY(0.64);
+          opacity: 0.54;
         }
       }
 
@@ -1025,18 +1124,44 @@
         color: #f2d78f;
       }
 
+      .footer-center {
+        display: grid;
+        justify-items: center;
+        gap: 7px;
+        text-align: center;
+      }
+
+      .footer-tagline,
+      .footer-copy {
+        margin: 0;
+      }
+
+      .footer-tagline {
+        color: #f2d78f;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .footer-copy {
+        color: rgba(255, 248, 237, 0.62);
+        font-size: 0.82rem;
+      }
+
       .footer-links,
       .social-links {
         display: flex;
         align-items: center;
-        gap: 16px;
+        justify-content: center;
+        gap: 12px;
         color: rgba(255, 248, 237, 0.72);
         font-size: 0.88rem;
       }
 
       .social-links a {
-        width: 38px;
-        height: 38px;
+        width: 48px;
+        height: 48px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1045,6 +1170,35 @@
         color: #fff8ed;
         font-size: 0.75rem;
         font-weight: 800;
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          background 180ms ease,
+          color 180ms ease;
+      }
+
+      .social-links a:hover {
+        transform: translateY(-2px);
+        border-color: rgba(242, 215, 143, 0.5);
+        background: rgba(242, 215, 143, 0.12);
+        color: #f2d78f;
+      }
+
+      .social-links svg {
+        width: 27px;
+        height: 27px;
+        display: block;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .social-links .youtube-icon .youtube-play,
+      .social-links .spotify-icon .spotify-dot {
+        fill: currentColor;
+        stroke: none;
       }
 
       @media (max-width: 920px) {
@@ -1163,7 +1317,9 @@
         h2,
         .micro-proof {
           width: 100%;
-          max-width: calc(100vw - 28px);
+          max-width: min(100%, 340px);
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .hero-copy,
@@ -1203,18 +1359,36 @@
           padding-top: 34px;
         }
 
+        .hero-grid,
+        .hero-content,
+        .section-head {
+          text-align: center;
+        }
+
+        .hero-content,
+        .section-head {
+          display: grid;
+          justify-items: center;
+          width: 100%;
+          overflow: hidden;
+        }
+
         .hero-brand {
           display: none;
         }
 
         .hero h1 {
-          font-size: clamp(2rem, 8.6vw, 2.45rem);
+          font-size: clamp(1.95rem, 8.2vw, 2.35rem);
           line-height: 1.02;
         }
 
         h2 {
-          font-size: clamp(1.75rem, 7.2vw, 2rem);
+          font-size: clamp(1.7rem, 6.8vw, 1.96rem);
           line-height: 1.06;
+        }
+
+        .section-head h2 {
+          max-width: min(100%, 305px);
         }
 
         .live-card h3,
@@ -1241,8 +1415,55 @@
           display: block;
         }
 
+        .section-head > div {
+          display: grid;
+          justify-items: center;
+        }
+
+        .eyebrow {
+          justify-content: center;
+        }
+
+        .hero-copy,
         .section-copy {
           margin-top: 14px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .hero-actions {
+          justify-content: center;
+          width: 100%;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .hero-actions .button {
+          width: min(100%, 230px);
+        }
+
+        .micro-proof {
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          text-align: center;
+        }
+
+        .live-card {
+          align-items: center;
+          text-align: center;
+        }
+
+        .live-card > div,
+        .live-card p {
+          display: grid;
+          justify-items: center;
+        }
+
+        .live-status {
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .live-footer,
@@ -1251,12 +1472,45 @@
           flex-direction: column;
         }
 
+        .live-footer {
+          align-items: center;
+          text-align: center;
+        }
+
+        .footer-inner {
+          align-items: center;
+          text-align: center;
+        }
+
+        .footer .brand,
+        .footer-links,
+        .social-links {
+          justify-content: center;
+        }
+
         .player-row {
           grid-template-columns: 1fr;
+          justify-items: center;
+          gap: 12px;
+          width: 100%;
         }
 
         .waveform {
+          height: 0;
+          width: min(100%, 280px);
+          max-width: 100%;
+          justify-content: center;
+          gap: 9px;
+        }
+
+        .live-card.is-playing .waveform {
           height: 62px;
+        }
+
+        .play-button {
+          min-width: 188px;
+          height: 58px;
+          min-height: 58px;
         }
 
         .social-grid {
@@ -1304,9 +1558,6 @@
 
           <div class="nav-actions">
             <a class="button" href="#comunidad">Únete</a>
-            <button class="icon-button search-button" type="button" aria-label="Buscar">
-              <span class="icon search" aria-hidden="true"></span>
-            </button>
           </div>
             <button class="icon-button mobile-hamburger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
             <span class="icon menu" aria-hidden="true"></span>
@@ -1548,7 +1799,7 @@
         </section>
       </main>
 
-      <footer class="footer">
+      <footer class="footer" id="footer">
         <div class="container footer-inner">
           <a class="brand" href="#inicio" aria-label="13 Lunas inicio">
             <span class="logo-mark" aria-hidden="true">
@@ -1571,15 +1822,37 @@
               <span class="brand-kicker">Una comunidad</span>
             </span>
           </a>
-          <div class="footer-links">
-            <a href="#">Privacidad</a>
-            <a href="#">Contacto</a>
-            <span>© 2026 13 Lunas</span>
+          <div class="footer-center">
+            <p class="footer-tagline">Espiritualidad libre · Caminos distintos · Una comunidad</p>
+            <div class="footer-links">
+              <a href="#">Privacidad</a>
+              <span aria-hidden="true">·</span>
+              <a href="#">Contacto</a>
+            </div>
+            <p class="footer-copy">© 2026 13 Lunas. Todos los derechos reservados.</p>
           </div>
           <div class="social-links" aria-label="Redes sociales">
-            <a href="#" aria-label="Instagram">IG</a>
-            <a href="#" aria-label="YouTube">YT</a>
-            <a href="#" aria-label="Spotify">SP</a>
+            <a href="#" aria-label="Instagram" title="Instagram">
+              <svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="4" y="4" width="16" height="16" rx="5"></rect>
+                <circle cx="12" cy="12" r="3.8"></circle>
+                <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </a>
+            <a href="#" aria-label="YouTube" title="YouTube">
+              <svg class="youtube-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3.5" y="6.5" width="17" height="11" rx="3.2"></rect>
+                <path class="youtube-play" d="M10.3 9.4v5.2l4.6-2.6z"></path>
+              </svg>
+            </a>
+            <a href="#" aria-label="Spotify" title="Spotify">
+              <svg class="spotify-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="8.5"></circle>
+                <path d="M8 10.1c2.7-.8 5.6-.5 8 1"></path>
+                <path d="M8.7 12.9c2.1-.6 4.4-.4 6.3.8"></path>
+                <path d="M9.3 15.4c1.5-.4 3.1-.2 4.5.6"></path>
+              </svg>
+            </a>
           </div>
         </div>
       </footer>
